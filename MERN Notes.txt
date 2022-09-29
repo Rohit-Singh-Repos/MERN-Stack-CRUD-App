@@ -1,0 +1,478 @@
+MERN NOTES 
+-------------------------------------------------------------------------------------------------------
+
+1) Introduction 
+----------------------------------------------------
+
+
+***************************************************************************************************************************************************************************************************
+
+2) Environmental Setup  
+----------------------------------------------------
+
+a) Software Requirements
+------------------------------------------------
+
+a.1) Frontend
+---------------------------------------------
+
+=> VSCode
+=> Git & Github
+=> NodeJS
+=> Postman
+
+a.2) Backend
+---------------------------------------------
+
+=> VSCode
+=> Git & Github
+=> NodeJS
+=> Postman
+=> MongoDB 
+=> MongoDB Compass
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+b) Packages to Install
+-------------------------------------------------
+
+b.1) Frontend
+---------------------------------------------
+
+=> React -- "npx create-react-app appname"
+=> Axios -- "npm i axios"
+=> React Devtools -- "npm i react-devtools"
+=> React Router Dom -- "npm i react-router-dom"
+=> Redux Toolkit + React Redux -- "npm i @reduxjs/toolkit react-redux"
+=> Redux Persist -- "npm i redux-persist"
+=> Redux Persist Transform Encrypt -- "npm i redux-persist-transform-encrypt"
+=> Redux Logger -- "npm i redux-logger"
+=> Hookstate -- "npm install @hookstate/core" Or, "npm install @hookstate/core@3" 
+=> Material UI / Tailwind CSS / Bootstrap
+=> React Icons -- "npm i react-icons"
+=> React Toastify -- "npm i react-toastify"
+
+b.2) Backend
+---------------------------------------------
+
+=> Nodemon -- "npm i -g nodemon"
+=> ExpressJS -- "npm i express"
+=> Mongoose -- "npm i mongoose"
+=> Dotenv -- "npm i dotenv"
+=> Jsonwebtoken -- "npm i jsonwebtoken"
+=> Bcrypt / BcryptJS -- "yarn add bcrypt" (Cause npm is not working)
+=> Nodemailer -- "npm i nodemailer"
+=> Cors -- "npm i cors"
+=> Swagger JSDoc -- "npm i swagger-jsdoc"
+=> Swagger UI Express -- "npm i swagger-ui-express"
+
+b.3) Common for both Fontend and Backend
+---------------------------------------------
+
+=> "Concurrently" package allows us to start both your "frontend" and "backend" at the same time. 
+=> Install "Concurrently" package at the root level / outside of both "frontend" and "backend" folders.
+=> For that we have to run "npm init -y" at the root level of our project and install "Concurrently" package.
+
+=> Concurrently -- "npm i -D concurrently"
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+c) VSCode Extensions 
+-----------------------------------------
+
+c.1) Frontend
+------------------------------
+
+Useful
+------------------------
+
+=> Auto Close Tag -- Jun Han
+=> Auto Complete Tag -- Jun Han 
+=> Auto Rename Tag -- Jun Han 
+=> Close HTML/XML Tag -- Compulim
+=> HTML to JSx -- Riaz Laskar
+=> Prettier -- Prettier
+=> Auto Import Relative Path -- ElecTreeFying
+=> ES7+ React/Redux/React-Native snippets -- dsznajder
+=> Image Preview -- Kiss Temas
+=> Import Cost -- Wix
+=> GitLens -- GitKraken
+=> JSX HTML Tags -- Angelo Rafael
+=> MERN Snippets -- Devzstudio
+
+Optional 
+------------------------
+
+=> JSX to SVG Viewer -- Mert Certel
+=> SVGR -- Nathhorrigan
+=> SVG Preview -- Simon Siefke
+=> Lorem Ipsum -- mrbubbles
+=> Git Graph -- mhutchie
+=> Github Pull Request -- Github
+
+c.2) Backend
+------------------------------
+
+=> ENV -- Jakka Prihatna
+=> EJS Beautify -- J69
+=> MERN Snippets -- Devzstudio
+=> MongoDB for VSCode -- MongoDB
+
+***************************************************************************************************************************************************************************************************
+
+3) Folder Structure
+----------------------------------------------------
+
+Project / Root Folder 
+-------------------------------------
+
+   a) Backend / Server Folder 
+   -------------------------------------
+   => config folder 
+   => controllers folder 
+   => middlewares folder 
+   => models folder 
+   => routes folder
+   => node_modules folder
+   => .gitignore file
+   => app.js file 
+   => package.json file
+
+   NOTE :- We can also place these folders inside of "src" folder.
+
+   b) Frontend / Client Folder 
+   -------------------------------------
+   => node_modules folder
+   => public folder 
+   => src folder
+      >> redux folder
+      >> pages folder 
+      >> assets folder -- (css,fonts,icons,images folders)
+      >> auth folder 
+      >> common folder 
+      >> globalstore folder 
+      >> routes folder 
+      >> logger folder 
+      >> helpers folder
+      >> app.jsx
+      >> index.js 
+   => package.json file
+
+=> node_modules
+=> package.json
+
+***************************************************************************************************************************************************************************************************
+
+4) Configuration to Start Application
+----------------------------------------------------
+
+a) Root "package.json" file 
+-------------------------------------
+
+{
+  "name": "mern",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && SET \"NODE_ENV=development\" && npm start\" ",
+    "start:prod": "concurrently \"cd backend && npm start\" \"cd frontend && SET \"NODE_ENV=production\" && npm run build\" "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.4.0",
+    "find-config": "^1.0.0"
+  }
+}
+
+b) Backend "package.json" file 
+-------------------------------------
+
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev":"nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.1",
+    "nodemailer": "^6.7.8"
+  }
+}
+
+c) Frontend "package.json" file 
+-------------------------------------
+
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.27.2",
+    "bootstrap": "^5.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.4.0",
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^6.4.0",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^9.0.8",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-persist-transform-encrypt": "^4.0.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+
+d) Command to Start Application
+-------------------------------------
+
+=> So our configurations are done and in order to start our application we should run "npm run dev", so that our frontend and backend runs at the same time.
+
+=> Command to Start Application in development environment -- "npm run start:dev".
+=> Command to Start Application in production environment -- "npm run start:prod".
+
+***************************************************************************************************************************************************************************************************
+
+4) Procedure to Create MERN Applications 
+----------------------------------------------------
+
+=> Create proper folder structure for both backend and frontend.
+=> Project setup by installing proper packages and modules.
+=> Create backend code.
+=> Test backend code using Postman.
+=> Connect ExpressJS backend with ReactJS frontend.
+=> Run you code.
+
+***************************************************************************************************************************************************************************************************
+
+5) Examples Related to MERN 
+----------------------------------------------------
+
+Example 1 -- Connecting Backend with Frontend
+-----------------------------------------------
+
+a) Backend files & folders
+-------------------------------------------
+
+Step 1 -- Creating Configurations 
+--------------------------------------
+
+.env
+---------------------------------
+
+# Backend Configurations
+NODE_ENV="development"
+PORT="5000"
+MONGODB_URI="mongodb://localhost:27017"
+DB_NAME="connection"
+
+config/config.js 
+---------------------------------
+
+require("dotenv").config({path:`${__dirname}/../.env`});
+
+// Or,
+
+// const path = require("path")
+// require("dotenv").config({path:path.resolve(__dirname, '../../.env')});
+
+// Or,
+// Install an external package called "find-config" by using "npm i find-config" command
+// require('dotenv').config({ path: require('find-config')('.env') })
+
+const config = {
+    env:process.env.NODE_ENV || "development",
+    port:process.env.PORT,
+    mongoUri:process.env.MONGODB_URI,
+    dbname:process.env.DB_NAME,
+    dr:__dirname+"../../.env"
+}
+
+module.exports = config;
+
+config/connection.js 
+---------------------------------
+
+const mongoose = require("mongoose");
+const config = require("./config");
+
+const connectToDB = async() => {
+    try {
+        const db_Options = {
+            dbName:config.dbname // Here only "dbName" key works fine other keys will show error
+        }
+        await mongoose.connect(config.mongoUri,db_Options)
+        console.log("Connected Successfully")
+    } catch (error) {
+        console.log("Error while connecting")
+    }
+}
+
+module.exports = connectToDB
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Step 2 -- Creating Models 
+--------------------------------------
+
+models/userdata.model.js 
+---------------------------------
+
+const mongoose = require("mongoose");
+const userDataSchema = new mongoose.Schema({
+    username:{type:String,required:true,trim:true},
+    useremail:{type:String,required:true,trim:true},
+})
+
+const UserDataModel = mongoose.model("userdata",userDataSchema);
+module.exports = UserDataModel;
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Step 3 -- Creating Controllers 
+--------------------------------------
+
+controllers/userdata.controller.js
+-----------------------------------
+
+const UserDataModel = require("../models/userdata.model");
+
+class UserDataController{
+    static saveData = async(req,res) => {
+        try {
+            const { name,email } = req.body;
+            if(name && email){
+                const getUserData = new UserDataModel({
+                    username:name,
+                    useremail:email 
+                })
+                const saveDocument = await getUserData.save();
+                res.send(saveDocument)
+            }else{
+                res.send("All fields are required")
+            }
+        } catch (error) {
+            console.log(error)
+            res.send(error)
+        }
+    }
+
+    static getData = async(req,res) => {
+        try {
+           const getUserData = await UserDataModel.find()
+           res.send(getUserData);
+        } catch (error) {
+            console.log(error)
+            res.send(error)
+        }
+    }
+}
+
+module.exports = UserDataController
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Step 4 -- Creating Routes 
+--------------------------------------
+
+routes/routes.js
+-----------------------------------
+
+const express = require("express");
+const router = express.Router();
+const UserDataController = require("../controllers/userdata.controller");
+
+
+router.get("/getuserdata",UserDataController.getData) // Route to get data from database
+router.post("/saveuserdata",UserDataController.saveData) // Route to save data in database
+ 
+module.exports = router
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Step 5 -- App Logic
+--------------------------------------
+
+app.js 
+------------------------------
+
+const express = require("express");
+const app = express();
+const config = require("./config/config");
+const connectToDB = require("./config/connection");
+const router = require("./routes/routes");
+const cors = require("cors")
+const PORT = config.port;
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+const swaggerConfig = require("./config/swaggerconfig");
+
+// Connect to Database
+connectToDB()
+
+// Resolving CORS Issue
+app.use(cors({origin:true}))
+
+// parse incoming requests of content-type - application/json
+app.use(express.json())
+
+// Creating Api Routes
+app.use("/api",router)
+
+app.listen(PORT,() => {
+    console.log(`Server Running at http://localhost:${PORT}`)
+})
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+b) Frontend files & folders
+-------------------------------------------
+
+******************************************************************************************************************************************************************************************
+
+=================================================================================================================================================================================================== END OF FILE

@@ -1,0 +1,965 @@
+API DOCUMENTATION FOR MERN APP WITH SWAGGER
+------------------------------------------------------------------------------------------
+
+1) Introduction to Swagger 
+-------------------------------------------------------
+
+Difference Between Open API and Swagger
+---------------------------------------------------
+
+=> OpenAPI is the name of the specification, while Swagger is the set of tools that implement this specification.
+
+Or,
+
+=> The easiest way to understand the difference is:
+
+>> OpenAPI = Specification
+>> Swagger = Tools for implementing the specification
+
+a) Open API 
+-------------------------------
+
+=> The OpenAPI is the official name of the specification. The development of the specification is fostered by the OpenAPI Initiative, which involves more the 30 organizations from different areas of the tech world — including Microsoft, Google, IBM, and CapitalOne. Smartbear Software, which is the company that leads the development of the Swagger tools, is also a member of the OpenAPI Initiative, helping lead the evolution of the specification.
+
+b) Swagger 
+-------------------------------
+
+=> Swagger is the name associated with some of the most well-known, and widely used tools for implementing the OpenAPI specification. The Swagger toolset includes a mix of open source, free, and commercial tools, which can be used at different stages of the API lifecycle.
+
+=> Swagger UI creates a docs page from a set of OpenAPI definitions. These definitions are written in YAML or JSON to describe a REST API.
+
+******************************************************************************************************************************************************************************************************
+
+2) Swagger Environmental Setup
+-------------------------------------------------------
+
+2.1) Packages to Install
+----------------------------------------------
+
+=> Swagger JSDoc -- "npm i swagger-jsdoc"
+=> Swagger UI Express -- "npm i swagger-ui-express"
+
+2.2) VSCode Extensions
+----------------------------------------------
+
+=> Swagger Snippets -- Adithya Sreyaj
+=> express-jsdoc-swagger-snippets -- brikev
+=> Swagger Viewer -- Arjun G
+=> Swagger Validator -- EmSav
+
+2.3) Swagger Options
+----------------------------------------------
+
+const swaggerConfig = {
+    definition:{
+        openapi:'3.0.0',
+        info:{
+            title:"MERN API Documentation",
+            version:'1.0.0'
+        },
+        servers:[
+            {
+                url:"http://localhost:5000/"
+            }
+        ]
+    },
+    apis:["../controllers/userdata.controller.js"]
+}
+
+module.exports = swaggerConfig
+
+2.4) Swagger Basic Syntax
+----------------------------------------------
+
+2.5) Run Swagger
+----------------------------------------------
+
+=> In order to open "Swagger UI", we have to run "http://localhost:3000/swagger_endpoint", that we define in our "app.js" like shown below,
+
+const swaggerSpec = swaggerJSDoc(swaggerConfig);
+app.use("/swagger_endpoint",swaggerUI.serve,swaggerUI.setup(swaggerSpec))
+
+=> Also make sure your server is running at some url.
+
+******************************************************************************************************************************************************************************************************
+
+3) Swagger Configurations
+-------------------------------------------------------
+
+a) Swagger Configuration Options 
+----------------------------------------------
+
+const swaggerConfigOptions = {
+  definition:{
+    openapi: '3.0.0',
+    info: {
+        title: 'API Title',
+        version: '1.0.0',
+        description:'API Description',
+        license: {
+        name: 'Licensed Under MIT',
+        url: 'https://spdx.org/licenses/MIT.html',
+        },
+        contact: {
+        name: 'JSONPlaceholder',
+        url: 'https://jsonplaceholder.typicode.com',
+        },
+    },
+    servers: [
+        {
+        url: 'http://localhost:3000',
+        description: 'Development server',
+        },
+    ],
+  },
+  apis: ['./routes/*.js'],
+};
+
+=> For more configuration options visit to -- "https://swagger.io/docs/specification/basic-structure/"
+
+b) Swagger Initialisation
+----------------------------------------------
+
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+
+const swaggerSpec = swaggerJSDoc(swaggerConfigOptions);
+app.use("/apidocumentation",swaggerUI.serve,swaggerUI.setup(swaggerSpec,{ explorer: true }))
+
+******************************************************************************************************************************************************************************************************
+
+4) Syntax of API Documentation using Swagger
+-------------------------------------------------------
+
+//
+
+
+******************************************************************************************************************************************************************************************************
+
+4) Things to Remember
+-------------------------------------------------------
+
+=> "swagger-jsdoc" package looks for comments with a "@swagger" or "@openapi" tag to create OpenAPI definitions / swagger documentation
+
+=> When you are defining the route for your application in the "swaggerConfigOptions", make sure the referencing must always start from the root of your application folder, so it becomes like "./routes/fileName.js".
+
+******************************************************************************************************************************************************************************************************
+
+3) Swagger Endpoints Examples
+-------------------------------------------------------
+
+=> For writing swagger configurations for api documentation, we have to write all our API docs parameters on backend side and inside of "backend folder".
+
+Example 1 -- Simple Application Documentation
+----------------------------------------------
+
+Step 1 -- Write Swagger Configuration
+------------------------------------------
+
+backend/config/swaggerConfig.js 
+-------------------------------------
+
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+
+const swaggerConfigOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'MERN Stack App',
+      description: 'Example of Simple MERN Stack App API Documentation ',
+      version: '1.0.0',
+    },
+    servers:[
+        {
+            url:"http://localhost:5000/",
+            description: 'Development server',
+        }
+    ]
+  },
+  // looks for configuration in specified directories
+  apis: ['./routes/*.js'],
+}
+
+const swaggerSpec = swaggerJSDoc(swaggerConfigOptions);
+
+const swaggerInit = (app) => {
+    
+    // Swagger Page
+    app.use("/apidocumentation",swaggerUI.serve,swaggerUI.setup(swaggerSpec,{ explorer: true }))
+
+    // Documentation in JSON format 
+    app.get('/apidocumentation.json', (req, res) => {
+        res.setHeader('Content-Type', 'application/json')
+        res.send(swaggerSpec)
+    })  
+}
+
+module.exports = swaggerInit
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 2 -- Write Swagger API Documentation
+------------------------------------------
+
+backend/routes/index.js 
+--------------------------------------
+
+const express = require("express")
+const router = express.Router()
+
+/**
+ * @swagger
+ * /:
+ *  get:
+ *     tags:
+ *     - Testing API Doc
+ *     summary: API Summary -- This is the documention i am writing for texting purpose 
+ *     description: API Description -- This is the documention i am writing for texting purpose 
+ *     responses:
+ *       200:
+ *         description: API is  running
+ */
+router.get('/',(req,res) => res.sendStatus(200))
+module.exports = router;
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 3 -- Writing App Logic
+------------------------------------------
+
+app.js 
+--------------------------------------
+
+const express = require("express");
+const router = require("./routes");
+const swaggerInit = require("./config/swaggerconfig");
+
+const app = express()
+const port = 5000
+
+app.use(express.json())
+app.use(router)
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+  swaggerInit(app, port)
+})
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 2 -- Simple MERN APP Documentation
+----------------------------------------------
+
+Step 1 -- Creating Configuration
+------------------------------------------
+
+.env 
+--------------------------------
+
+# Backend Configurations
+NODE_ENV="development"
+PORT="5000"
+MONGODB_URI="mongodb://localhost:27017"
+DB_NAME="connection"
+JWT_SECRET_KEY="763527hsdvfhsdf876hjasd76512231hkjzsf121af2423sdfsdf"
+
+config/config.js
+--------------------------------
+
+require("dotenv").config({path:`${__dirname}/../.env`});
+
+// Or,
+
+// const path = require("path")
+// require("dotenv").config({path:path.resolve(__dirname, '../../.env')});
+
+// Or,
+// Install an external package called "find-config" by using "npm i find-config" command
+// require('dotenv').config({ path: require('find-config')('.env') })
+
+const config = {
+    env:process.env.NODE_ENV || "development",
+    port:process.env.PORT,
+    mongoUri:process.env.MONGODB_URI,
+    dbname:process.env.DB_NAME,
+    dr:__dirname+"../../.env"
+}
+
+module.exports = config;
+
+config/connection.js 
+--------------------------------
+
+const mongoose = require("mongoose");
+const config = require("./config");
+
+const connectToDB = async() => {
+    try {
+        const db_Options = {
+            dbName:config.dbname // Here only "dbName" key works fine other keys will show error
+        }
+        await mongoose.connect(config.mongoUri,db_Options)
+        console.log("Connected Successfully")
+    } catch (error) {
+        console.log("Error while connecting")
+    }
+}
+
+module.exports = connectToDB
+
+config/swaggerConfig.js
+--------------------------------
+
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+
+const swaggerConfigOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'MERN Stack App',
+      description: 'Example of Simple MERN Stack App API Documentation ',
+      version: '1.0.0',
+    },
+    servers:[
+        {
+            url:"http://localhost:5000/",
+            description: 'Development server',
+        }
+    ]
+  },
+  // looks for configuration in specified directories
+  apis: ['./routes/*.js'],
+}
+
+const swaggerSpec = swaggerJSDoc(swaggerConfigOptions);
+
+const swaggerInit = (app) => {
+    
+    // Swagger Page
+    app.use("/apidocumentation",swaggerUI.serve,swaggerUI.setup(swaggerSpec,{ explorer: true }))
+
+    // Documentation in JSON format 
+    app.get('/apidocumentation.json', (req, res) => {
+        res.setHeader('Content-Type', 'application/json')
+        res.send(swaggerSpec)
+    })  
+}
+
+module.exports = swaggerInit
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 2 -- Creating Models
+------------------------------------------
+
+models/userdata.model.js
+--------------------------------
+
+const mongoose = require("mongoose");
+const userDataSchema = new mongoose.Schema({
+    username:{type:String,required:true,trim:true},
+    useremail:{type:String,required:true,trim:true},
+})
+
+const UserDataModel = mongoose.model("userdata",userDataSchema);
+module.exports = UserDataModel;
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 3 -- Creating Routes
+------------------------------------------
+
+routes/index.js
+--------------------------------
+
+const express = require("express")
+const router = express.Router()
+const simpleMernAppRouter = require("./simplemernapp.routes")
+
+router.use(simpleMernAppRouter)
+module.exports = router
+
+routes/simplemernapp.routes.js
+--------------------------------
+
+const express = require("express");
+const simpleMernAppRouter = express.Router();
+const UserDataController = require("../controllers/userdata.controller");
+
+// ================================== Getting data from database start =====================================//
+
+/**
+ * @swagger
+ * '/api/getuserdata':
+ *  get:
+ *     tags:
+ *     - Get Users Data
+ *     summary: This api will gets a specific user data from the database
+ *     description: Api endpoint to get all users data
+ *     responses:
+ *       200:
+ *         description: Successfully Get All Users Data
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                type: object
+ *                properties:
+ *                  id:
+ *                    type: string
+ *                  username:
+ *                    type: string
+ *                  useremail:
+ *                    type: string
+ *       400:
+ *         description: Bad request
+ */
+simpleMernAppRouter.get("/getuserdata",UserDataController.getData) 
+
+// ================================== Getting data from database end ========================================//
+
+// ================================== Post data to database start ========================================//
+
+/**
+ * @swagger
+ * '/api/saveuserdata':
+ *  post:
+ *     tags:
+ *     - Save Users Data
+ *     summary: This api will creates a specific user data into the database
+ *     description: Api endpoint to save all users data
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - name
+ *              - email
+ *            properties:
+ *              name:
+ *                type: string
+ *                default: Yashveer Singh
+ *              email:
+ *                type: string
+ *     responses:
+ *      201:
+ *        description: Data Created Successfully
+ *      409:
+ *        description: Conflict Raised
+ *      404:
+ *        description: Not Found
+ */
+simpleMernAppRouter.post("/saveuserdata",UserDataController.saveData) 
+
+// ================================== Post data to database end =========================================//
+
+module.exports = simpleMernAppRouter;
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 4 -- Creating Controllers
+------------------------------------------
+
+controllers/userdata.controller.js
+-------------------------------------
+
+const UserDataModel = require("../models/userdata.model");
+
+class UserDataController{
+    static saveData = async(req,res) => {
+        try {
+            const { name,email } = req.body;
+            if(name && email){
+                const getUserData = new UserDataModel({
+                    username:name,
+                    useremail:email 
+                })
+                const saveDocument = await getUserData.save();
+                res.send(saveDocument)
+            }else{
+                res.send("All fields are required")
+            }
+        } catch (error) {
+            console.log(error)
+            res.send(error)
+        }
+    }
+
+    static getData = async(req,res) => {
+        try {
+           const getUserData = await UserDataModel.find()
+           res.send(getUserData);
+        } catch (error) {
+            console.log(error)
+            res.send(error)
+        }
+    }
+}
+
+module.exports = UserDataController
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 5 -- Running App Logic
+------------------------------------------
+
+app.js
+-------------------------------------
+
+// Importing Packages
+
+const express = require("express");
+const cors = require("cors");
+
+// Importing Modules or, Files
+const swaggerInit = require("./config/swaggerconfig");
+const router = require("./routes");
+const config = require("./config/config");
+const connectToDB = require("./config/connection");
+
+// Initializing Variables
+const app = express()
+const PORT = config.port;
+
+// Connect to Database
+connectToDB()
+
+// Resolving CORS Issue
+app.use(cors({origin:true}))
+
+// parse incoming requests of content-type - application/json
+app.use(express.json())
+
+// Initializing API Routes
+app.use("/api",router)
+
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`)
+  swaggerInit(app)
+})
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 4 -- MERN CRUD APP Documentation
+----------------------------------------------
+
+Step 1 -- Creating Configurations
+----------------------------------------
+
+.env 
+--------------------------------
+
+# Backend Configurations
+NODE_ENV="development"
+PORT="5000"
+MONGODB_URI="mongodb://localhost:27017"
+DB_NAME="connection"
+JWT_SECRET_KEY="763527hsdvfhsdf876hjasd76512231hkjzsf121af2423sdfsdf"
+
+config/config.js
+--------------------------------
+
+require("dotenv").config({path:`${__dirname}/../.env`});
+
+// Or,
+
+// const path = require("path")
+// require("dotenv").config({path:path.resolve(__dirname, '../../.env')});
+
+// Or,
+// Install an external package called "find-config" by using "npm i find-config" command
+// require('dotenv').config({ path: require('find-config')('.env') })
+
+const config = {
+    env:process.env.NODE_ENV || "development",
+    port:process.env.PORT,
+    mongoUri:process.env.MONGODB_URI,
+    dbname:process.env.DB_NAME,
+    dr:__dirname+"../../.env"
+}
+
+module.exports = config;
+
+config/connection.js 
+--------------------------------
+
+const mongoose = require("mongoose");
+const config = require("./config");
+
+const connectToDB = async() => {
+    try {
+        const db_Options = {
+            dbName:config.dbname // Here only "dbName" key works fine other keys will show error
+        }
+        await mongoose.connect(config.mongoUri,db_Options)
+        console.log("Connected Successfully")
+    } catch (error) {
+        console.log("Error while connecting")
+    }
+}
+
+module.exports = connectToDB
+
+config/swaggerConfig.js
+--------------------------------
+
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+
+const swaggerConfigOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'MERN Stack App',
+      description: 'Example of Simple MERN Stack App API Documentation ',
+      version: '1.0.0',
+    },
+    servers:[
+        {
+            url:"http://localhost:5000/",
+            description: 'Development server',
+        }
+    ]
+  },
+  // looks for configuration in specified directories
+  apis: ['./routes/*.js'],
+}
+
+const swaggerSpec = swaggerJSDoc(swaggerConfigOptions);
+
+const swaggerInit = (app) => {
+    
+    // Swagger Page
+    app.use("/apidocumentation",swaggerUI.serve,swaggerUI.setup(swaggerSpec,{ explorer: true }))
+
+    // Documentation in JSON format 
+    app.get('/apidocumentation.json', (req, res) => {
+        res.setHeader('Content-Type', 'application/json')
+        res.send(swaggerSpec)
+    })  
+}
+
+module.exports = swaggerInit
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 2 -- Creating Models
+----------------------------------------
+
+models/userdata.model.js
+--------------------------------
+
+const mongoose = require("mongoose");
+const userDataSchema = new mongoose.Schema({
+    username:{type:String,required:true,trim:true},
+    useremail:{type:String,required:true,trim:true},
+})
+
+const UserDataModel = mongoose.model("userdata",userDataSchema);
+module.exports = UserDataModel;
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 3 -- Creating Routes
+------------------------------------------
+
+routes/index.js
+--------------------------------
+
+const express = require("express")
+const router = express.Router()
+const simpleMernAppRouter = require("./simplemernapp.routes")
+
+router.use(simpleMernAppRouter)
+module.exports = router
+
+routes/simplemernapp.routes.js
+--------------------------------
+
+const express = require("express");
+const simpleMernAppRouter = express.Router();
+const UserDataController = require("../controllers/userdata.controller");
+
+// ================================== Getting data from database start =====================================//
+
+/**
+ * @swagger
+ * '/api/getuserdata':
+ *  get:
+ *     tags:
+ *     - Get Users Data
+ *     summary: This api will gets a specific user data from the database
+ *     description: Api endpoint to get all users data
+ *     responses:
+ *       200:
+ *         description: Successfully Get All Users Data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   username:
+ *                     type: string
+ *                   useremail:
+ *                     type: string
+ *       400:
+ *         description: Bad request
+ */
+simpleMernAppRouter.get("/getuserdata",UserDataController.getData) 
+
+// ================================== Getting data from database end ========================================//
+
+// ================================== Post data to database start ========================================//
+
+/**
+ * @swagger
+ * '/api/saveuserdata':
+ *  post:
+ *     tags:
+ *     - Save Users Data
+ *     summary: This api will creates a specific user data into the database
+ *     description: Api endpoint to save users data
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - name
+ *              - email
+ *            properties:
+ *              name:
+ *                  - type: string
+ *                  - default: Yashveer Singh
+ *              email:
+ *                  - type: string
+ *                  - default: errohitsingh@gmail.com
+ *     responses:
+ *      201:
+ *        description: Data Created Successfully
+ *      409:
+ *        description: Conflict Raised
+ *      404:
+ *        description: Not Found
+ */
+simpleMernAppRouter.post("/saveuserdata",UserDataController.saveData) 
+
+// ================================== Post data to database end ============================================//
+
+// ================================== Update data to database start ===========================================//
+
+/**
+ * @swagger
+ * '/api/updateuser':
+ *  put:
+ *     tags:
+ *     - Update User by Id
+ *     summary: This API will update the particular user
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - id
+ *              - name
+ *              - email
+ *            properties:
+ *              id:
+ *                type: string
+ *              name:
+ *                type: string
+ *              email:
+ *                type: string
+ *     responses:
+ *      200:
+ *        description: Modified
+ *      400:
+ *        description: Bad Request
+ *      404:
+ *        description: Not Found
+ */
+
+simpleMernAppRouter.get("/getuserdatabyid/:id",UserDataController.getDataById) 
+simpleMernAppRouter.put("/updateuser",UserDataController.updateUserById) 
+
+// ================================== Update data to database end ============================================//
+
+// ================================== Delete data from database start ======================================//
+
+/**
+ * @swagger
+ * '/api/deleteuserdata/{id}':
+ *  delete:
+ *     tags:
+ *     - Delete User Data
+ *     summary: This api will remove a specific user data from the database
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The unique id of the User
+ *        required: true
+ *     responses:
+ *      200:
+ *        description: Removed
+ *      400:
+ *        description: Bad request
+ *      404:
+ *        description: Not Found
+ */
+simpleMernAppRouter.delete("/deleteuserdata/:id",UserDataController.deleteData) 
+
+// ================================== Delete data from database end =========================================//
+
+module.exports = simpleMernAppRouter;
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 4 -- Creating Controllers
+------------------------------------------
+
+controllers/userdata.controller.js
+-------------------------------------
+
+const UserDataModel = require("../models/userdata.model");
+
+class UserDataController{
+    static saveData = async(req,res) => {
+        try {
+            const { name,email } = req.body;
+            if(name && email){
+                const getUserData = new UserDataModel({
+                    username:name,
+                    useremail:email 
+                })
+                const saveDocument = await getUserData.save();
+                res.send(saveDocument)
+            }else{
+                res.send("All fields are required")
+            }
+        } catch (error) {
+            res.send(error)
+        }
+    }
+
+    static getData = async(req,res) => {
+        try {
+           const getUserData = await UserDataModel.find()
+           res.send(getUserData);
+        } catch (error) {
+            res.send(error)
+        }
+    }
+
+    static getDataById = async(req,res) => {
+        try {
+            const getId = await UserDataModel.findById(req.params.id)
+            res.send(getId)
+        } catch (error) {
+            res.send(error)
+        }
+    }
+
+    static updateUserById = async(req,res) => {
+        try {
+            const {id,name,email} = req.body
+            const updateUser = await UserDataModel.findByIdAndUpdate(id,{
+                username:name,
+                useremail:email
+            })
+            console.log(updateUser)
+            res.send(updateUser)
+        } catch (error) {
+            res.send(error)
+        }
+    }
+
+    static deleteData = async(req,res) => {
+        try {
+            const deleteData = await UserDataModel.findByIdAndRemove(req.params.id)
+            res.send("Data deleted successfully")
+        } catch (error) {
+            res.send(error)
+        }
+    }
+}
+
+module.exports = UserDataController
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Step 5 -- Running App Logic
+------------------------------------------
+
+app.js
+-------------------------------------
+
+// Importing Packages
+
+const express = require("express");
+const cors = require("cors");
+
+// Importing Modules or, Files
+const swaggerInit = require("./config/swaggerconfig");
+const router = require("./routes");
+const config = require("./config/config");
+const connectToDB = require("./config/connection");
+
+// Initializing Variables
+const app = express()
+const PORT = config.port;
+
+// Connect to Database
+connectToDB()
+
+// Resolving CORS Issue
+app.use(cors({origin:true}))
+
+// parse incoming requests of content-type - application/json
+app.use(express.json())
+
+// Initializing API Routes
+app.use("/api",router)
+
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`)
+  swaggerInit(app)
+})
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 5 -- MERN Bookstore APP Documentation
+----------------------------------------------
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 6 -- MERN Auth APP Documentation
+----------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example 7 -- MERN Ecommerce APP Documentation
+----------------------------------------------
+
+====================================================================================================================================================================================================== END OF FILE
+
+https://dev.to/kabartolo/how-to-document-an-express-api-with-swagger-ui-and-jsdoc-50do
+
+https://www.section.io/engineering-education/documenting-node-js-rest-api-using-swagger/
+
+https://dev.to/przpiw/document-express-api-with-swagger-51in
+
+https://blog.logrocket.com/documenting-your-express-api-with-swagger/
+
+https://www.section.io/engineering-education/documenting-node-js-rest-api-using-swagger/

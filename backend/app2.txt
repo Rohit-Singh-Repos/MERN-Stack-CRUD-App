@@ -1,0 +1,32 @@
+const express = require("express");
+const app = express();
+const config = require("./config/config");
+const connectToDB = require("./config/connection");
+const router = require("./routes/routes");
+const cors = require("cors")
+const PORT = config.port;
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUI = require("swagger-ui-express");
+const swaggerConfig = require("./config/swaggerconfig");
+
+// Connect to Database
+connectToDB()
+
+// Resolving CORS Issue
+app.use(cors({origin:true}))
+
+// parse incoming requests of content-type - application/json
+app.use(express.json())
+
+// Creating Api Routes
+app.use("/api",router)
+
+// Swagger documentaion config
+const swaggerSpec = swaggerJSDoc(swaggerConfig);
+app.use("/apidocumentation",swaggerUI.serve,swaggerUI.setup(swaggerSpec))
+
+app.listen(PORT,() => {
+    console.log(`Server Running at http://localhost:${PORT}`)
+})
+
+

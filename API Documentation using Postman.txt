@@ -1,0 +1,35 @@
+API DOCUMENTATION USING POSTMAN 
+-----------------------------------------------------------------------------------------------------
+
+Introduction 
+-----------------------------------------------------------------
+
+Points to Remember Regarding Postman Documentation
+-----------------------------------------------------------------
+
+=> In order to create documentation for api's using postman we need create an account and connect it with our postman software.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Importing and Exporting Postman Collections 
+----------------------------------------------------------------
+
+=> EXPORTING COLLECTION -- For exporting a "Postman Collection", "Right Click on the Collection Folder > Click on Export", so as to export a collection in the json format.
+
+=> IMPORTING COLLECTION -- For Importing a "Postman Collection", "Click on Import Button > Choose a postman json file that wants to import".
+
+=> Before creating your account if you have created any api endpoints make sure you have to export all those api endpoint and will import after login.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Steps Required for Postman documentation
+----------------------------------------------------------------
+
+=> Step 1 -- Importing your "postmanCollectionFilename.json" in your postman software.
+=> Step 2 -- Open API documentation for that particular collection.
+=> Step 3 -- Write configurations like headers / Auth etc for your api.
+=> Step 4 -- Publish your api through postman and then it will open a browser window.
+=> Step 5 -- From that browser window we have options for configurations related to API documentation.
+=> Step 6 -- After, all configurations is done for API documentation, publish your API.
+
+======================================================================================================================================================================================== END OF FILE
